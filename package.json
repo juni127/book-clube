@@ -20,6 +20,9 @@
       "version": "^11"
     }
   },
+  "engines": {
+    "packageManager": "^npm@11.0.0"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
