@@ -2,8 +2,8 @@ name: testing
 run-name: Test commits
 on:
   push:
-    branches:
-      - '!main'
+    branches-ignore:
+      - 'main'
 jobs:
   run-test:
     runs-on: ubuntu-latest
