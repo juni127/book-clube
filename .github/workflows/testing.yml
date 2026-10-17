@@ -32,8 +32,9 @@ jobs:
     permissions:
       issues: write
     steps:
+      - uses: actions/checkout@v4
       - name: Create issue
-        run: gh issue create -a @${{ github.actor }} --type 'Tests failed' -l ${{ github.ref_name }} --title 'Test failed on commit "${{ github.event.head_commit.message }}"' --body ''
+        run: gh issue create -a @${{ github.actor }} --type 'Tests failed' -l '${{ github.ref_name }}' --title 'Test failed on commit "${{ github.event.head_commit.message }}"' --body ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -44,6 +45,7 @@ jobs:
     permissions:
       issues: write
     steps:
+      - uses: actions/checkout@v4
       - name: Get past issues
         run: echo "$(gh issue list --type "Tests failed" -l ${{ github.ref_name }} --json number)" >> issues.json
         env:
