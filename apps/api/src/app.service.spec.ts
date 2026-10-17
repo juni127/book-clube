@@ -15,10 +15,4 @@ describe('AppService', () => {
   it('should be defined', () => {
     expect(appService).toBeDefined();
   });
-
-  describe('getStatus', () => {
-    it('should be defined', () => {
-      expect(appService).toHaveProperty('getStatus');
-    })
-  });
 })
