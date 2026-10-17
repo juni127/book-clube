@@ -5,16 +5,25 @@ on:
     branches-ignore:
       - 'main'
 jobs:
+  create-label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create label
+        run: gh label create 'branch ${{ github.ref_name }}' --description 'Label for the "${{ github.ref_name }}" branch.'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   run-test:
-    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Cache turbo build setup
-        uses: actions/cache/restore@v6
+        uses: actions/cache@v6
         with:
           path: |
-             node_modules
              .turbo
           key: ${{ runner.os }}-turbo-${{ hashFiles('package-lock.json') }}
           restore-keys: |
@@ -29,28 +38,30 @@ jobs:
   create-issue:
     runs-on: ubuntu-latest
     needs: [ 'run-test' ]
-    if: needs.run-test.result != 'success'
+    if: ${{ always() && needs.run-test.result != 'success' }}
     permissions:
       issues: write
     steps:
+      - uses: actions/checkout@v4
       - name: Create issue
-        run: gh issue create -a @${{ github.actor }} --type "Tests failed" -l ${{ github.ref_name }}
+        run: gh issue create -a ${{ github.actor }} -l 'tests failed' -l 'branch ${{ github.ref_name }}' --title 'Test failed on commit "${{ github.event.head_commit.message }}"' --body ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   remove-issues:
     runs-on: ubuntu-latest
     needs: [ 'run-test' ]
-    if: needs.run-test.result == 'success'
+    if: ${{ needs.run-test.result == 'success' }}
     permissions:
       issues: write
     steps:
+      - uses: actions/checkout@v4
       - name: Get past issues
-        run: echo "$(gh issue list --type "Tests failed" -l ${{ github.ref_name }} --json number)" >> issues.json
+        run: echo "$(gh issue list -l "tests failed" -l 'branch ${{ github.ref_name }}' --json number)" >> issues.json
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install JQ
-        run: apt-get update && sudo apt-get install -y jq
+        run: sudo apt-get update && sudo apt-get install -y jq
       - name: Remove issues
         run: |
           jq -c '.[] | .number' issues.json | while read i; do
