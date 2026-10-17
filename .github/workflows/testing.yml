@@ -10,6 +10,7 @@ jobs:
     permissions:
       issues: write
     steps:
+      - uses: actions/checkout@v4
       - name: Create label
         run: gh label create ${{ github.ref_name }} --description 'Label for the "${{ github.ref_name }}" branch.'
         env:
