@@ -6,7 +6,6 @@ on:
       - 'main'
 jobs:
   run-test:
-    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +49,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install JQ
-        run: apt-get update && sudo apt-get install -y jq
+        run: sudo apt-get update && sudo apt-get install -y jq
       - name: Remove issues
         run: |
           jq -c '.[] | .number' issues.json | while read i; do
