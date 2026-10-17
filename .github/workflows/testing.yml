@@ -1,4 +1,4 @@
-name: testing
+name: Test commits
 run-name: Test commits
 on:
   push:
@@ -8,7 +8,7 @@ jobs:
   run-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v8
+      - uses: actions/checkout@v4
       - name: Cache turbo build setup
         uses: actions/cache/restore@v6
         with:
