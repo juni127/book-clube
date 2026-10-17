@@ -1,5 +1,5 @@
-name: branches-testing
-# run-name: Testing commit
+name: testing
+run-name: Test commits
 on:
   push:
     branches:
