@@ -28,7 +28,7 @@ jobs:
   create-issue:
     runs-on: ubuntu-latest
     needs: [ 'run-test' ]
-    if: needs.run-test.result != 'success'
+    if: ${{ always() && needs.run-test.result != 'success' }}
     permissions:
       issues: write
     steps:
@@ -40,7 +40,7 @@ jobs:
   remove-issues:
     runs-on: ubuntu-latest
     needs: [ 'run-test' ]
-    if: needs.run-test.result == 'success'
+    if: ${{ needs.run-test.result == 'success' }}
     permissions:
       issues: write
     steps:
