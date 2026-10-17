@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create issue
-        run: gh issue create -a @${{ github.actor }} --type 'Tests failed' -l '${{ github.ref_name }}' --title 'Test failed on commit "${{ github.event.head_commit.message }}"' --body ''
+        run: gh issue create -a ${{ github.actor }} --type 'Tests failed' -l '${{ github.ref_name }}' --title 'Test failed on commit "${{ github.event.head_commit.message }}"' --body ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
