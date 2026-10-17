@@ -1,11 +1,12 @@
-name: Test commits
-run-name: Test commits
+name: Testing
+run-name: Test commit of ${{ github.ref_name }}
 on:
   push:
     branches-ignore:
       - 'main'
 jobs:
   run-test:
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,3 +25,34 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run test
+
+  create-issue:
+    runs-on: ubuntu-latest
+    needs: [ 'run-test' ]
+    if: needs.run-test.result != 'success'
+    permissions:
+      issues: write
+    steps:
+      - name: Create issue
+        run: gh issue create -a @${{ github.actor }} --type "Tests failed" -l ${{ github.ref_name }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  remove-issues:
+    runs-on: ubuntu-latest
+    needs: [ 'run-test' ]
+    if: needs.run-test.result == 'success'
+    permissions:
+      issues: write
+    steps:
+      - name: Get past issues
+        run: echo "$(gh issue list --type "Tests failed" -l ${{ github.ref_name }} --json number)" >> issues.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install JQ
+        run: apt-get update && sudo apt-get install -y jq
+      - name: Remove issues
+        run: |
+          jq -c '.[] | .number' issues.json | while read i; do
+            gh issue delete $i
+          done
