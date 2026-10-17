@@ -75,3 +75,5 @@ jobs:
           jq -c '.[] | .number' issues.json | while read i; do
             gh issue delete $i
           done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
