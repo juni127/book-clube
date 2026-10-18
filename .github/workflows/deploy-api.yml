@@ -4,7 +4,7 @@ run-name: Deploy commit "${{ github.ref_name }}" to AWS
 on:
   push:
     branches: ["main"]
-    paths: ["apps/api/**", ".github/workflows/deploy-api.yml"]
+    paths: ["apps/api/**", ".github/workflows/deploy-api.yml", ".aws/task-definition.json"]
 
 concurrency:
   group: "aws-ecs"
