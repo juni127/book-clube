@@ -12,11 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create label
-<<<<<<< HEAD
         run: gh label create 'branch ${{ github.ref_name }}' --description 'Label for the "${{ github.ref_name }}" branch.'
-=======
-        run: gh label create 'branch-${{ github.ref_name }}' --description 'Label for the "${{ github.ref_name }}" branch.'
->>>>>>> 3d1adc2 (changed issue labels of testing action)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,11 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Get past issues
-<<<<<<< HEAD
         run: echo "$(gh issue list -l "tests failed" -l 'branch ${{ github.ref_name }}' --json number)" >> issues.json
-=======
-        run: echo "$(gh issue list -l "tests failed" -l 'branch-${{ github.ref_name }}' --json number)" >> issues.json
->>>>>>> 3d1adc2 (changed issue labels of testing action)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install JQ
