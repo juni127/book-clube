@@ -15,6 +15,7 @@ env:
   ECS_SERVICE: book-club-api-task-definition
   ECS_CLUSTER: book-clube-cluster
   CONTAINER_NAME: book-club-api-container
+  ECS_TASK_DEFINITION: book-club-api-task-definition
 
 jobs:
   deploy:
