@@ -1,4 +1,5 @@
 name: Deploy Nest.js app to AWS ECS
+run-name: Deploy commit "${{ github.ref_name }}" to AWS
 
 on:
   push:
