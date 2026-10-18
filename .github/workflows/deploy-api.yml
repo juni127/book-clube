@@ -3,7 +3,7 @@ name: Deploy Nest.js app to AWS ECS
 on:
   push:
     branches: ["main"]
-    paths: ["apps/api/**"]
+    paths: ["apps/api/**", ".github/workflows/deploy-api.yml"]
 
 concurrency:
   group: "aws-ecs"
@@ -11,7 +11,7 @@ concurrency:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: book-club-repository
+  ECR_REPOSITORY: book-clube-repository
   ECS_SERVICE: book-club-api-task-definition
   ECS_CLUSTER: book-clube-cluster
   CONTAINER_NAME: book-club-api-container
