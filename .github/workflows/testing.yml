@@ -1,5 +1,5 @@
 name: Testing
-run-name: Test commit of ${{ github.ref_name }}
+run-name: Test commit of ${{ github.event.head_commit.message }}
 on:
   push:
     branches-ignore:
