@@ -7,6 +7,6 @@ export class AppService {
   }
 
   getServerHealthInfo(): string {
-    throw new NotImplementedException();
+    return 'Hey, listen!';
   }
 }
