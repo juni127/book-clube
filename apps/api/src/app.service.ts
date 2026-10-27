@@ -7,6 +7,6 @@ export class AppService {
   }
 
   getServerHealthInfo(): string {
-    return 'Hey, listen!';
+    return 'Hey, Listen!';
   }
 }
