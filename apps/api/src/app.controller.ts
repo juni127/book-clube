@@ -12,6 +12,6 @@ export class AppController {
 
   @Get('health')
   getServerHealthInformation(): string {
-    throw new NotImplementedException();
+    return this.appService.getServerHealthInfo();
   }
 }
