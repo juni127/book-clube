@@ -1,0 +1,70 @@
+name: Check wich app needs to be redeployed
+
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ 'main' ]
+    types: [ 'closed' ]
+
+jobs:
+  # Plan job (detect if a app was updated)
+  plan:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      web-changed: ${{ steps.check.outputs.web_changed }}
+      api-changed: ${{ steps.check.outputs.api_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.15.0'
+          cache: 'npm'
+
+      - name: Install jq dependency
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y jq
+
+      - name: Install node dependencies
+        run: npm ci
+
+      - name: Check if api was affected
+        id: check
+        run: |
+          API_COUNT=$(npx turbo query affected --packages api | jq '.data.affectedPackages.length')
+          WEB_COUNT=$(npx turbo query affected --packages web | jq '.data.affectedPackages.length')
+
+          if [ "$API_COUNT" -gt 0 ]; then
+            echo "api_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "api_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "$WEB_COUNT" -gt 0 ]; then
+            echo "web_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "web_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+  # Call web deploy if web app changed
+  web-deploy:
+    name: Call web deploy workflow
+    needs: plan
+    if: needs.plan.outputs.web-changed == 'true'
+    uses: ./.github/workflows/deploy-web.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+  # Call api deploy if api app changed
+  api-deploy:
+    name: Call api deploy workflow
+    needs: plan
+    if: needs.plan.outputs.api-changed == 'true'
+    uses: ./.github/workflows/deploy-api.yml
