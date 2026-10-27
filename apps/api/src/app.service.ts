@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
@@ -7,6 +7,6 @@ export class AppService {
   }
 
   getServerHealthInfo(): string {
-    return 'Hey, listen!';
+    throw new NotImplementedException();
   }
 }

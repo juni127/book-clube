@@ -57,6 +57,7 @@ jobs:
     needs: plan
     if: needs.plan.outputs.web-changed == 'true'
     uses: ./.github/workflows/deploy-web.yml
+    secrets: inherit
     permissions:
       contents: read
       pages: write
@@ -68,3 +69,4 @@ jobs:
     needs: plan
     if: needs.plan.outputs.api-changed == 'true'
     uses: ./.github/workflows/deploy-api.yml
+    secrets: inherit
