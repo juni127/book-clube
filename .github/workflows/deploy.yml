@@ -10,7 +10,7 @@ on:
 jobs:
   # Plan job (detect if a app was updated)
   plan:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
       web-changed: ${{ steps.check.outputs.web_changed }}
